@@ -3,15 +3,12 @@ class User < ApplicationRecord
 
   attr_accessor :password, :password_confirmation
 
-  validates :email, presence: true, 
-                    uniqueness: true,
-
+  validates :email, presence: true, uniqueness: true
   validates :password, length: { in: 7..255 }
-  validates :passwords_are_equal
-  validates :valid_email
+  validate :passwords_are_equal, :valid_email
 
   def save
-    password_digest = PasswordSecurity.hash(password)
+    write_attribute(:password_digest, PasswordSecurity.hash(password))
     super
   end
 

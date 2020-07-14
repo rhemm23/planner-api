@@ -15,9 +15,9 @@ Rails.application.routes.draw do
 
       # User
       get 'users/me', to: 'users#show'
-      get 'users/token', to: 'users#token'
+      post 'users/token', to: 'users#token'
       post 'users/edit', to: 'users#edit'
-      post 'users/new', to: 'users#new'
+      post 'users/new', to: 'users#create'
     end
   end
 end

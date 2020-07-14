@@ -16,8 +16,8 @@ class ApplicationController < ActionController::API
     head 401
   end
 
-  def get_jwt
-    payload = { user_id: @current_user.id }
+  def get_jwt(user_id)
+    payload = { user_id: user_id }
     JWT.encode payload, ENV['API_SECRET'], 'HS256'
   end
 

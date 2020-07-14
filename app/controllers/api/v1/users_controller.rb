@@ -1,13 +1,12 @@
 module Api
   module V1
     class UsersController < ApplicationController
-      before_action :jwt_authenticate, except: [:create]
+      before_action :jwt_authenticate, except: [:create, :token]
 
       def create
         user = User.new(user_params)
         if user.save
-          @current_user = user
-          render json: { token: get_jwt }, status: 200
+          render json: { token: get_jwt(user.id) }, status: 200
         else
           render json: user.errors, status: 400
         end
@@ -26,7 +25,12 @@ module Api
       end
       
       def token
-        render json: { token: get_jwt }, status: 200
+        user = User.find_by(email: params[:email])
+        if !user || !PasswordSecurity.verify(user.password_digest, params[:password])
+          error('Invalid login credentials')
+        else
+          render json: { token: get_jwt(user.id) }, status: 200
+        end
       end
 
       private
