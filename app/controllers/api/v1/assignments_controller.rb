@@ -37,10 +37,11 @@ module Api
 
       def assignment_params
         params.permit(
-          :due_date,
           :title,
           :description,
           :course_id
+        ).merge(
+          due_date: Time.at(params[:due_date].to_i).to_datetime
         )
       end
 
