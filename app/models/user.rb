@@ -8,7 +8,9 @@ class User < ApplicationRecord
   validate :passwords_are_equal, :valid_email
 
   def save
-    write_attribute(:password_digest, PasswordSecurity.hash(password))
+    if password
+      write_attribute(:password_digest, PasswordSecurity.hash(password))
+    end
     super
   end
 

@@ -7,7 +7,7 @@ module Api
       def create
         assignment = Assignment.new(assignment_params)
         if assignment.save
-          render json: @assignment, status: 200
+          render json: AssignmentSerializer.new(assignment).to_json, status: 200
         else
           render json: assignment.errors, status: 400
         end
@@ -15,18 +15,22 @@ module Api
 
       def edit
         if @assignment.update(assignment_params)
-          render json: @assignment, status: 200
+          render json: AssignmentSerializer.new(@assignment).to_json, status: 200
         else
           render json: @assignment.errors, status: 400
         end
       end
 
       def show
-        render json: @assignment, status: 200
+        render json: AssignmentSerializer.new(@assignment).to_json, status: 200
       end
 
       def list
-        render json: @current_user.courses.assignments.order(due_date: :DESC), status: 200
+        assignments = Assignment
+          .where(course_id: @current_user.courses)
+          .order(due_date: :DESC)
+          
+        render json: assignments, each_serializer: AssignmentSerializer, status: 200
       end
 
       private

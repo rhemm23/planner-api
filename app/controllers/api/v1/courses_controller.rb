@@ -2,12 +2,12 @@ module Api
   module V1
     class CoursesController < ApplicationController
       before_action :jwt_authenticate
-      before_action :set_course, only: [:create, :edit]
+      before_action :set_course, only: [:show, :edit]
 
       def create
         course = Course.new(course_parameters)
         if course.save
-          render json: course, status: 200
+          render json: CourseSerializer.new(course).to_json, status: 200
         else
           render json: course.errors, status: 400
         end
@@ -15,18 +15,18 @@ module Api
 
       def edit
         if @course.update(course_parameters)
-          render json: @course, status: 200
+          render json: CourseSerializer.new(@course).to_json, status: 200
         else
           render json: @course.errors, status: 400
         end
       end
 
       def list
-        render json: @current_user.courses, status: 200
+        render json: @current_user.courses, each_serializer: CourseSerializer, status: 200
       end
 
       def show
-        render json: @course, status: 200
+        render json: CourseSerializer.new(@course).to_json, status: 200
       end
 
       private

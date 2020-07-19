@@ -14,14 +14,14 @@ module Api
 
       def edit
         if @current_user.update(user_params)
-          render json: @current_user, status: 200
+          render json: UserSerializer.new(@current_user).to_json, status: 200
         else
           render json: @current_user.errors, status: 400
         end
       end
 
       def show
-        render json: @current_user, status: 200
+        render json: UserSerializer.new(@current_user).to_json, status: 200
       end
       
       def token
